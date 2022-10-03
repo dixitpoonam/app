@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+       tools {
+           maven "Maven"
+       }
+    stages {
+        stage('Test') {
+            steps {
+                echo 'Test'
+                sh "mvn --version"
+                
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Build'
+                sh "mvn package"
+            }
+        }
+        stage('Production') {
+            steps {
+                echo 'Production'
+                deploy adapters: [tomcat9(credentialsId: '70bb7ca0-50da-4300-b42e-042eab01db5d', path: '', url: 'http://192.168.0.17:8081')], contextPath: '/app', war: '**/*.war'
+            }
+        }
+    }
+}
